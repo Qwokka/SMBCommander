@@ -887,8 +887,7 @@ def activeSessionsWatcher(server):
                           "/" +
                           existing_client.username.decode('utf-16le'))
             if cli_target == con_target and cli_login.lower() == con_login.lower():
-                # TODO Put back to normal
-                #match = True
+                match = True
                 break
 
         if match:
