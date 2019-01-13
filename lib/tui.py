@@ -370,8 +370,8 @@ class TUI(cmd.Cmd):
 
         # Draw server header
         for key, value in header_values:
-            keylen = len(key)
-            vallen = len(value)
+            keylen = len(str(key))
+            vallen = len(str(value))
 
             space_to_go = self.top_width - xindex
 
@@ -384,13 +384,13 @@ class TUI(cmd.Cmd):
                 value = value[:max_val_size - 3] + "..."
                 vallen = len(value)
 
-            win.addstr(1, xindex, key)
+            win.addstr(1, xindex, str(key))
 
             win.chgat(1, xindex, keylen, curses.A_BOLD)
 
             xindex += keylen + 1
 
-            win.addstr(1, xindex, value)
+            win.addstr(1, xindex, str(value))
 
             xindex += vallen + 2
 
