@@ -534,7 +534,8 @@ class TUI(cmd.Cmd):
 
                 win.addstr(realy, 1, line)
 
-                if line_index == 0 and entry_index == self.sessions_index:
+                if line_index == 0 and entry_index == self.sessions_index and \
+                   self.select == SELECT_SESS:
                     win.chgat(realy, 1, len(line), curses.A_REVERSE)
 
                 if realy > maxy:
