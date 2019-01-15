@@ -159,7 +159,7 @@ def psexec_cmd(session, command, path=None):
 def psexec_file(session, filename):
     session.lock.acquire()
 
-    commander.tui.shell.output("psexec_file got lock")
+    logging.debug("psexec_file acquired session lock")
 
     try:
         f = open(filename)
@@ -181,7 +181,7 @@ def psexec_file(session, filename):
 
     session.lock.release()
 
-    commander.tui.shell.output("psexec_file released lock")
+    logging.debug("psexec_file released session lock")
 
 def random_string(length):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
@@ -193,7 +193,7 @@ def secretsdump_callback(secret):
 def secretsdump(session):
     session.lock.acquire()
 
-    commander.tui.shell.output("secretsdump got lock")
+    logging.debug("secretsdump acquired session lock")
 
     samHashes = None
     try:
@@ -233,4 +233,4 @@ def secretsdump(session):
 
         session.lock.release()
 
-        commander.tui.shell.output("secretsdump released lock")
+        logging.debug("secretsdump released session lock")
