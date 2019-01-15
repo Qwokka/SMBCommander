@@ -80,6 +80,9 @@ def split_args(line):
     except ValueError:
         parts = line.split(" ")
 
+    if not len(parts):
+        return None, None
+
     cmd  = parts[0]
     args = parts[1:]
 
@@ -95,6 +98,8 @@ def parse_bool(value):
 
 # TODO
 def psexec_cmd(session, command, path=None):
+    session.lock.acquire()
+
     if commander.server.service_name is not None:
         svc_name = commander.server.service_name
     else:
@@ -149,7 +154,13 @@ def psexec_cmd(session, command, path=None):
 
     ans = connection.readNamedPipe(tid, fid_main, 8)
 
+    session.lock.release()
+
 def psexec_file(session, filename):
+    session.lock.acquire()
+
+    commander.tui.shell.output("psexec_file got lock")
+
     try:
         f = open(filename)
     except:
@@ -168,6 +179,10 @@ def psexec_file(session, filename):
 
     installService.uninstall()
 
+    session.lock.release()
+
+    commander.tui.shell.output("psexec_file released lock")
+
 def random_string(length):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
@@ -176,6 +191,10 @@ def secretsdump_callback(secret):
     commander.tui.shell.output(secret)
 
 def secretsdump(session):
+    session.lock.acquire()
+
+    commander.tui.shell.output("secretsdump got lock")
+
     samHashes = None
     try:
         connection = SMBConnection(existingConnection = session)
@@ -211,3 +230,7 @@ def secretsdump(session):
             samHashes.finish()
         if remoteOps is not None:
             remoteOps.finish()
+
+        session.lock.release()
+
+        commander.tui.shell.output("secretsdump released lock")

@@ -15,7 +15,7 @@ import time
 from binascii import hexlify, unhexlify
 from Queue import Queue
 from struct import pack, unpack
-from threading import Thread, Timer
+from threading import Thread, Timer, Lock
 from urlparse import urlparse
 
 import socksserver
@@ -578,6 +578,8 @@ class SMBClient(SMB):
         self.machineAccount = None
         self.machineHashes = None
 
+        self.lock = Lock()
+
         SMB.__init__(self,remote_name, remote_name, sess_port = sess_port)
 
     def neg_session(self):
@@ -936,6 +938,8 @@ def keepAliveTimer(server):
         if session is None:
             continue
 
+        session.lock.acquire()
+
         try:
             connection = SMBConnection(existingConnection = session)
 
@@ -950,3 +954,6 @@ def keepAliveTimer(server):
 
             del session
             del connection
+
+        session.lock.release()
+
